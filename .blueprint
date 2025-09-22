@@ -1,0 +1,16 @@
+created:
+    - app/Http/Controllers/StudentController.php
+    - database/factories/StudentFactory.php
+    - database/migrations/2025_09_19_214710_create_students_table.php
+    - app/Models/Student.php
+    - tests/Feature/Http/Controllers/StudentControllerTest.php
+    - app/Http/Requests/StudentStoreRequest.php
+    - app/Http/Requests/StudentUpdateRequest.php
+    - resources/views/students/index.blade.php
+    - resources/views/students/create.blade.php
+    - resources/views/students/show.blade.php
+    - resources/views/students/edit.blade.php
+updated:
+    - routes/web.php
+models:
+    Student: { nombres: 'string:100', correo: 'string:100 unique', cedula: 'string:20 unique', edad: 'integer nullable', telefono: 'string:20 nullable', direccion: 'string nullable', status: 'enum:activo,inactivo,graduado default:activo', softdeletes: softDeletes }

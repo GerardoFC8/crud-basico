@@ -1,0 +1,94 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Lista de estudiantes
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+            
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Lista de Estudiantes (Controlador)</h1>
+                <a href="{{ route('students.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md shadow-sm">
+                    Crear Estudiante
+                </a>
+            </div>
+
+            @if (session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <!-- Input de Búsqueda -->
+                <div class="p-4">
+                    <input type="text" id="search-input" class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Buscar por nombre, correo o cédula...">
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200" id="students-table">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombres</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cédula</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                <th scope="col" class="relative px-6 py-3">
+                                    <span class="sr-only">Acciones</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <!-- Contenedor permanente para las filas de la tabla -->
+                        <tbody id="students-table-body" class="bg-white divide-y divide-gray-200">
+                            @include('students._table', ['students' => $students])
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Contenedor permanente para la paginación -->
+                <div id="students-pagination" class="p-4">
+                    {{ $students->links() }}
+                </div>
+            </div>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('search-input');
+            const tableBody = document.getElementById('students-table-body');
+            const paginationContainer = document.getElementById('students-pagination');
+            let debounceTimer;
+
+            searchInput.addEventListener('keyup', function () {
+                const query = searchInput.value;
+                
+                clearTimeout(debounceTimer);
+                
+                debounceTimer = setTimeout(() => {
+                    fetchStudents(query);
+                }, 500);
+            });
+
+            function fetchStudents(query = '') {
+                const url = `{{ route('students.index') }}?search=${query}`;
+                
+                fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(response => response.json()) // <-- Esperamos una respuesta JSON
+                .then(data => {
+                    // Actualizamos el contenido de nuestros contenedores permanentes
+                    tableBody.innerHTML = data.table_html;
+                    paginationContainer.innerHTML = data.pagination_html;
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+        </script>
+
+    </div>
+</x-app-layout>
