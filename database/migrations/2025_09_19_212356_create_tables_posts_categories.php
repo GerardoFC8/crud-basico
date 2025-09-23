@@ -44,10 +44,10 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id'); 
 
             // BOOLEAN con valor por defecto
-            $table->boolean('is_featured')->default(false); 
+            $table->boolean('is_featured')->nullable()->default(false); 
 
             // INTEGER para contador de vistas
-            $table->integer('views_count')->unsigned()->default(0);
+            $table->integer('views_count')->nullable()->unsigned()->default(0);
 
             // TIMESTAMP para la fecha de publicación, puede ser nulo
             $table->timestamp('published_at')->nullable(); 

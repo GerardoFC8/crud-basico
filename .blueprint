@@ -1,16 +1,27 @@
 created:
-    - app/Http/Controllers/StudentController.php
-    - database/factories/StudentFactory.php
-    - database/migrations/2025_09_19_214710_create_students_table.php
-    - app/Models/Student.php
-    - tests/Feature/Http/Controllers/StudentControllerTest.php
-    - app/Http/Requests/StudentStoreRequest.php
-    - app/Http/Requests/StudentUpdateRequest.php
-    - resources/views/students/index.blade.php
-    - resources/views/students/create.blade.php
-    - resources/views/students/show.blade.php
-    - resources/views/students/edit.blade.php
+    - app/Http/Controllers/CategoryController.php
+    - app/Http/Controllers/PostController.php
+    - database/factories/CategoryFactory.php
+    - database/factories/PostFactory.php
+    - app/Models/Category.php
+    - app/Models/Post.php
+    - tests/Feature/Http/Controllers/CategoryControllerTest.php
+    - tests/Feature/Http/Controllers/PostControllerTest.php
+    - app/Http/Requests/CategoryStoreRequest.php
+    - app/Http/Requests/CategoryUpdateRequest.php
+    - app/Http/Requests/PostStoreRequest.php
+    - app/Http/Requests/PostUpdateRequest.php
+    - resources/views/category/index.blade.php
+    - resources/views/category/create.blade.php
+    - resources/views/category/show.blade.php
+    - resources/views/category/edit.blade.php
+    - resources/views/post/index.blade.php
+    - resources/views/post/create.blade.php
+    - resources/views/post/show.blade.php
+    - resources/views/post/edit.blade.php
 updated:
     - routes/web.php
 models:
     Student: { nombres: 'string:100', correo: 'string:100 unique', cedula: 'string:20 unique', edad: 'integer nullable', telefono: 'string:20 nullable', direccion: 'string nullable', status: 'enum:activo,inactivo,graduado default:activo', softdeletes: softDeletes }
+    Category: { name: 'string:100 unique', description: 'text nullable' }
+    Post: { title: "string:255 default:'Untitled Post'", content: longtext, status: "enum:['draft', 'published', 'archived'] default:'draft'", is_featured: 'boolean default:false', views_count: 'integer unsigned default:0', published_at: 'timestamp nullable', softdeletes: softDeletes, relationships: { belongsTo: Category } }

@@ -12,25 +12,8 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        // Obtiene el término de búsqueda de la solicitud
-        $search = $request->input('search');
-
-        $students = Student::query()
-            ->where('nombres', 'like', "%{$search}%")
-            ->orWhere('correo', 'like', "%{$search}%")
-            ->orWhere('cedula', 'like', "%{$search}%")
-            ->latest()
-            ->paginate(10);
+        $students = Student::all();
             
-        // Si la solicitud es una petición AJAX (hecha por nuestro JavaScript)
-        if ($request->ajax()) {
-            return response()->json([
-                'table_html' => view('students._table', compact('students'))->render(),
-                'pagination_html' => $students->links()->toHtml(),
-            ]);
-        }
-        
-        // Si es una carga de página normal, devuelve la vista completa
         return view('students.index', compact('students'));
     }
 
