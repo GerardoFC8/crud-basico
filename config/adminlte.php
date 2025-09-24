@@ -358,6 +358,14 @@ return [
                     'text' => 'Publicaciones',
                     'route' => 'posts.index',
                 ],
+                [
+                    'text' => 'Roles',
+                    'route' => 'roles.index',
+                ],
+                [
+                    'text' => 'Permisos',
+                    'route' => 'permissions.index',
+                ],
                 // [
                 //     'text' => 'level_one',
                 //     'url' => '#',

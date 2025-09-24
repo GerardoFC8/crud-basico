@@ -1,27 +1,29 @@
 created:
-    - app/Http/Controllers/CategoryController.php
-    - app/Http/Controllers/PostController.php
-    - database/factories/CategoryFactory.php
-    - database/factories/PostFactory.php
-    - app/Models/Category.php
-    - app/Models/Post.php
-    - tests/Feature/Http/Controllers/CategoryControllerTest.php
-    - tests/Feature/Http/Controllers/PostControllerTest.php
-    - app/Http/Requests/CategoryStoreRequest.php
-    - app/Http/Requests/CategoryUpdateRequest.php
-    - app/Http/Requests/PostStoreRequest.php
-    - app/Http/Requests/PostUpdateRequest.php
-    - resources/views/category/index.blade.php
-    - resources/views/category/create.blade.php
-    - resources/views/category/show.blade.php
-    - resources/views/category/edit.blade.php
-    - resources/views/post/index.blade.php
-    - resources/views/post/create.blade.php
-    - resources/views/post/show.blade.php
-    - resources/views/post/edit.blade.php
+    - app/Http/Controllers/RoleController.php
+    - app/Http/Controllers/PermissionController.php
+    - database/factories/RoleFactory.php
+    - database/factories/PermissionFactory.php
+    - app/Models/Role.php
+    - app/Models/Permission.php
+    - tests/Feature/Http/Controllers/RoleControllerTest.php
+    - tests/Feature/Http/Controllers/PermissionControllerTest.php
+    - app/Http/Requests/RoleStoreRequest.php
+    - app/Http/Requests/RoleUpdateRequest.php
+    - app/Http/Requests/PermissionStoreRequest.php
+    - app/Http/Requests/PermissionUpdateRequest.php
+    - resources/views/role/index.blade.php
+    - resources/views/role/create.blade.php
+    - resources/views/role/show.blade.php
+    - resources/views/role/edit.blade.php
+    - resources/views/permission/index.blade.php
+    - resources/views/permission/create.blade.php
+    - resources/views/permission/show.blade.php
+    - resources/views/permission/edit.blade.php
 updated:
     - routes/web.php
 models:
     Student: { nombres: 'string:100', correo: 'string:100 unique', cedula: 'string:20 unique', edad: 'integer nullable', telefono: 'string:20 nullable', direccion: 'string nullable', status: 'enum:activo,inactivo,graduado default:activo', softdeletes: softDeletes }
     Category: { name: 'string:100 unique', description: 'text nullable' }
     Post: { title: "string:255 default:'Untitled Post'", content: longtext, status: "enum:['draft', 'published', 'archived'] default:'draft'", is_featured: 'boolean default:false', views_count: 'integer unsigned default:0', published_at: 'timestamp nullable', softdeletes: softDeletes, relationships: { belongsTo: Category } }
+    Role: { name: 'string:125', guard_name: 'string:125', relationships: { belongsToMany: Permission } }
+    Permission: { name: 'string:125', guard_name: 'string:125' }

@@ -35,3 +35,9 @@ Route::get('/blog/{post}', function (Post $post) {
     }
     return view('post.show-public', compact('post'));
 })->name('posts.public.show');
+
+Route::resource('roles', App\Http\Controllers\RoleController::class);
+
+Route::resource('permissions', App\Http\Controllers\PermissionController::class);
+
+Route::get('roles/show/{role}', [App\Http\Controllers\RoleController::class, 'show'])->name('roles.show');

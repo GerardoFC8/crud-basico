@@ -1,23 +1,16 @@
 models:
-  Category:
-    name: string:100 unique
-    description: text nullable
-
-  Post:
-    title: string:255 default:'Untitled Post'
-    content: longtext
-    status: enum:['draft', 'published', 'archived'] default:'draft'
-    is_featured: boolean default:false
-    views_count: integer unsigned default:0
-    published_at: timestamp nullable
-    softDeletes: true
-
+  Role:
+    name: string:125
+    guard_name: string:125
     relationships:
-      belongsTo: Category
+      belongsToMany: Permission
+
+  Permission:
+    name: string:125
+    guard_name: string:125
 
 controllers:
-  Category:
+  Role:
     resource: web
-
-  Post:
+  Permission:
     resource: web
