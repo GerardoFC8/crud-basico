@@ -12,6 +12,11 @@
             <h3 class="card-title">{{ $post->title }}</h3>
         </div>
         <div class="card-body">
+             @if($post->image_path)
+                <div class="text-center mb-4">
+                    <img src="{{ asset('storage/' . $post->image_path) }}" class="img-fluid rounded" alt="{{ $post->title }}" style="max-height: 400px;">
+                </div>
+            @endif
             <div class="row">
                 <div class="col-md-8">
                     <strong>Contenido:</strong>
@@ -51,7 +56,9 @@
         </div>
         <div class="card-footer">
             <a href="{{ route('posts.index') }}" class="btn btn-secondary">Volver al listado</a>
+            @can('posts.edit')
             <a href="{{ route('posts.edit', $post) }}" class="btn btn-primary">Editar</a>
+            @endcan
         </div>
     </div>
 @stop

@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('posts.store') }}" method="POST">
+            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for="title">Título:</label>
@@ -37,6 +37,17 @@
                     <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="6" placeholder="Escriba el contenido del post" required>{{ old('content') }}</textarea>
                     @error('content')
                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Imagen del Post</label>
+                    <div class="custom-file">
+                        <input type="file" accept="image/*" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image">
+                        <label class="custom-file-label" for="image">Elegir archivo</label>
+                    </div>
+                     @error('image')
+                        <span class="invalid-feedback d-block" role="alert"><strong>{{ $message }}</strong></span>
                     @enderror
                 </div>
                 
@@ -75,4 +86,16 @@
             </form>
         </div>
     </div>
+@stop
+
+@section('js')
+<script>
+    // Script para mostrar el nombre del archivo en el input de tipo file
+    $('.custom-file-input').on('change', function(event) {
+        var inputFile = event.currentTarget;
+        $(inputFile).parent()
+            .find('.custom-file-label')
+            .html(inputFile.files[0].name);
+    });
+</script>
 @stop

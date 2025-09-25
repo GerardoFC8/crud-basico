@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Models\Permission as SpatiePermission;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Traits\HasPermissions;
 
-class Permission extends Model
+class Permission extends SpatiePermission
 {
-    use HasFactory, HasPermissions;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -32,8 +31,5 @@ class Permission extends Model
         ];
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'role_has_permissions');
-    }
+    // No es necesario definir la relación roles() aquí, ya la hereda de SpatiePermission.
 }

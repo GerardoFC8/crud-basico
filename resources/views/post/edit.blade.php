@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('posts.update', $post) }}" method="POST">
+            <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -42,7 +42,23 @@
                     @enderror
                 </div>
 
-                 <div class="row">
+                <div class="form-group">
+                    <label for="image">Imagen del Post</label>
+                    @if($post->image_path)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $post->image_path) }}" alt="Imagen actual" style="width: 150px; border-radius: 5px;">
+                    </div>
+                    @endif
+                    <div class="custom-file">
+                        <input type="file" accept="image/*" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image">
+                        <label class="custom-file-label" for="image">Elegir nuevo archivo</label>
+                    </div>
+                    @error('image')
+                        <span class="invalid-feedback d-block" role="alert"><strong>{{ $message }}</strong></span>
+                    @enderror
+                </div>
+
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="status">Estado:</label>
@@ -77,4 +93,16 @@
             </form>
         </div>
     </div>
+@stop
+
+@section('js')
+<script>
+    // Script para mostrar el nombre del archivo en el input de tipo file
+    $('.custom-file-input').on('change', function(event) {
+        var inputFile = event.currentTarget;
+        $(inputFile).parent()
+            .find('.custom-file-label')
+            .html(inputFile.files[0].name);
+    });
+</script>
 @stop

@@ -25,6 +25,12 @@
             color: #6c757d;
             margin-bottom: 25px;
         }
+        .post-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
         .post-content {
             font-size: 1.1rem;
             line-height: 1.7;
@@ -51,6 +57,11 @@
             
             <hr>
             
+            {{-- Imagen del Post (si existe) --}}
+            @if($post->image_path)
+                <img src="{{ asset('storage/' . $post->image_path) }}" alt="{{ $post->title }}" class="post-image">
+            @endif
+
             {{-- Contenido principal del Post --}}
             <div class="post-content">
                 {{ $post->content }}

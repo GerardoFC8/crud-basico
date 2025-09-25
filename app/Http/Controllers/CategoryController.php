@@ -29,9 +29,7 @@ class CategoryController extends Controller
     {
         $category = Category::create($request->validated());
 
-        $request->session()->flash('category.id', $category->id);
-
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('success', 'Categoría creada exitosamente.');
     }
 
     public function show(Request $request, Category $category): View
@@ -52,13 +50,13 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
 
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('success', 'Categoría actualizada exitosamente.');
     }
 
     public function destroy(Request $request, Category $category): RedirectResponse
     {
         $category->delete();
 
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('success', 'Categoría eliminada exitosamente.');
     }
 }

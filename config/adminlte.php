@@ -347,24 +347,33 @@ return [
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
                 [
+                    'text' => 'Usuarios',
+                    'route' => 'users.index',
+                    'can' => 'users.index', // Proteger vista de usuarios
+                ],
+                [
                     'text' => 'Estudiantes',
                     'route' => 'students.index',
                 ],
                 [
                     'text' => 'Categorias',
                     'route' => 'categories.index',
+                    'can' => 'categories.index', // Proteger vista de categorías
                 ],
                 [
                     'text' => 'Publicaciones',
                     'route' => 'posts.index',
+                    'can' => 'posts.index', // Proteger vista de posts
                 ],
                 [
                     'text' => 'Roles',
                     'route' => 'roles.index',
+                    'can' => 'roles.index', // Proteger vista de roles
                 ],
                 [
                     'text' => 'Permisos',
                     'route' => 'permissions.index',
+                    'can' => 'permissions.index', // Proteger vista de permisos
                 ],
                 // [
                 //     'text' => 'level_one',

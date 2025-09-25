@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
 use App\Livewire\StudentManager;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
@@ -18,26 +23,51 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Users
+    Route::get('users', [UserController::class, 'index'])->name('users.index')->middleware('can:users.index');
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('can:users.edit');
+    Route::put('users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('can:users.edit');
+
+    // Categories
+    Route::resource('categories', CategoryController::class)->except(['show'])
+         ->middleware('can:categories.index,index')
+         ->middleware('can:categories.create,create,store')
+         ->middleware('can:categories.edit,edit,update')
+         ->middleware('can:categories.destroy,destroy');
+    Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show')->middleware('can:categories.index');
+
+    // Posts
+    Route::resource('posts', PostController::class)->except(['show'])
+         ->middleware('can:posts.index,index')
+         ->middleware('can:posts.create,create,store')
+         ->middleware('can:posts.edit,edit,update')
+         ->middleware('can:posts.destroy,destroy');
+    Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show')->middleware('can:posts.index');
+    
+    // Roles & Permissions
+    Route::resource('roles', RoleController::class)->middleware('can:roles.index,index')
+         ->middleware('can:roles.create,create,store')
+         ->middleware('can:roles.edit,edit,update')
+         ->middleware('can:roles.destroy,destroy');
+    Route::resource('permissions', PermissionController::class)->middleware('can:permissions.index,index')
+         ->middleware('can:permissions.create,create,store')
+         ->middleware('can:permissions.edit,edit,update')
+         ->middleware('can:permissions.destroy,destroy');
+
+    // Rutas sin permisos específicos por ahora
+    Route::resource('students', StudentController::class);
+    Route::get('students-livewire', StudentManager::class)->name('students.livewire');
 });
 
-require __DIR__.'/auth.php';
-Route::resource('students', StudentController::class);
-Route::get('students-livewire', StudentManager::class)->name('students.livewire');
-
-Route::resource('categories', App\Http\Controllers\CategoryController::class);
-Route::resource('posts', App\Http\Controllers\PostController::class);
-Route::get('list-posts', [App\Http\Controllers\PostController::class, 'listPosts'])->name('posts.list');
-
+// Rutas Públicas de Posts
+Route::get('list-posts', [PostController::class, 'listPosts'])->name('posts.list');
 Route::get('/blog/{post}', function (Post $post) {
-    // Solo muestra posts que estén publicados
     if ($post->status !== 'published') {
         abort(404);
     }
     return view('post.show-public', compact('post'));
 })->name('posts.public.show');
 
-Route::resource('roles', App\Http\Controllers\RoleController::class);
 
-Route::resource('permissions', App\Http\Controllers\PermissionController::class);
-
-Route::get('roles/show/{role}', [App\Http\Controllers\RoleController::class, 'show'])->name('roles.show');
+require __DIR__.'/auth.php';

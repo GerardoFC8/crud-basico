@@ -19,6 +19,7 @@ class Post extends Model
     protected $fillable = [
         'title',
         'content',
+        'image_path',
         'status',
         'is_featured',
         'views_count',

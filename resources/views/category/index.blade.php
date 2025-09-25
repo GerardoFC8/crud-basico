@@ -7,14 +7,26 @@
 @section('content_header')
     <div class="d-flex justify-content-between">
         <h1>Listado de Categorías</h1>
+        @can('categories.create')
         <a href="{{ route('categories.create') }}" class="btn btn-success">
             <i class="fas fa-plus"></i> Crear Nueva
         </a>
+        @endcan
     </div>
 @stop
 
 @section('content')
     <div class="card">
+        
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                <strong>¡Éxito!</strong> {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
         <div class="card-body">
             <table id="categoriesTable" class="table table-striped table-bordered" style="width:100%">
                 <thead>
@@ -32,12 +44,16 @@
                             <td>{{ $category->name }}</td>
                             <td>{{ Str::limit($category->description, 50) }}</td>
                             <td>
-                                <form action="{{ route('categories.destroy', $category) }}" method="POST">
+                                <form action="{{ route('categories.destroy', $category) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta categoría?');">
                                     <a href="{{ route('categories.show', $category) }}" class="btn btn-sm btn-info" title="Ver"><i class="fas fa-eye"></i></a>
+                                    @can('categories.edit')
                                     <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-primary" title="Editar"><i class="fas fa-edit"></i></a>
+                                    @endcan
                                     @csrf
                                     @method('DELETE')
+                                    @can('categories.destroy')
                                     <button type="submit" class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    @endcan
                                 </form>
                             </td>
                         </tr>
@@ -46,11 +62,6 @@
             </table>
         </div>
     </div>
-@stop
-
-@section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
 @stop
 
 @section('js')

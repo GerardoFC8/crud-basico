@@ -15,6 +15,16 @@
 
 @section('content')
     <div class="card">
+
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                <strong>¡Éxito!</strong> {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        
         <div class="card-body">
             <table id="permissionsTable" class="table table-striped table-bordered" style="width:100%">
                 <thead>
@@ -30,9 +40,9 @@
                             <td>{{ $permission->id }}</td>
                             <td>{{ $permission->name }}</td>
                             <td>
-                                <a href="{{ route('permissions.show', $permission) }}" class="btn btn-sm btn-info" title="Ver"><i class="fas fa-eye"></i></a>
-                                <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-sm btn-primary" title="Editar"><i class="fas fa-edit"></i></a>
                                 <form action="{{ route('permissions.destroy', $permission) }}" method="POST">
+                                    <a href="{{ route('permissions.show', $permission) }}" class="btn btn-sm btn-info" title="Ver"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-sm btn-primary" title="Editar"><i class="fas fa-edit"></i></a>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
