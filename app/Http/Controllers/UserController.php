@@ -51,7 +51,6 @@ class UserController extends Controller
             
             $permissionIds = $request->input('permissions', []);
             $permissions = Permission::whereIn('id', $permissionIds)->pluck('name');
-
             $user->syncPermissions($permissions);
 
             DB::commit();

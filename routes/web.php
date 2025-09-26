@@ -35,21 +35,25 @@ Route::middleware('auth')->group(function () {
          ->middleware('can:categories.create,create,store')
          ->middleware('can:categories.edit,edit,update')
          ->middleware('can:categories.destroy,destroy');
+
     Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show')->middleware('can:categories.index');
 
+    // LO MISMO DE ARRIBA, PERO USANDO ROLES
+    // Route::middleware('role:CategoriesManager')->group(function () {
+    //     Route::resource('categories', CategoryController::class);
+    // });
+
     // Posts
-    Route::resource('posts', PostController::class)->except(['show'])
-         ->middleware('can:posts.index,index')
-         ->middleware('can:posts.create,create,store')
-         ->middleware('can:posts.edit,edit,update')
-         ->middleware('can:posts.destroy,destroy');
-    Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show')->middleware('can:posts.index');
+    Route::middleware('role:PostsManager')->group(function () {
+        Route::resource('posts', PostController::class);
+    });
     
     // Roles & Permissions
     Route::resource('roles', RoleController::class)->middleware('can:roles.index,index')
          ->middleware('can:roles.create,create,store')
          ->middleware('can:roles.edit,edit,update')
          ->middleware('can:roles.destroy,destroy');
+         
     Route::resource('permissions', PermissionController::class)->middleware('can:permissions.index,index')
          ->middleware('can:permissions.create,create,store')
          ->middleware('can:permissions.edit,edit,update')

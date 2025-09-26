@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -37,14 +38,18 @@ class PostController extends Controller
         return view('post.create', [
             'categories' => $categories,
         ]);
+
     }
 
     public function store(PostStoreRequest $request): RedirectResponse
     {
         $data = $request->validated();
-
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('posts', 'public');
+            $image = $request->file('image');
+            
+            $fileName = time() . '-' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+
+            $data['image_path'] = $image->storeAs('posts', $fileName, 'public');
         }
 
         Post::create($data);
@@ -72,17 +77,21 @@ class PostController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
+            // Borramos la imagen anterior si existe
             if ($post->image_path) {
                 Storage::disk('public')->delete($post->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('posts', 'public');
+            
+            $image = $request->file('image');
+            $fileName = time() . '-' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+
+            $data['image_path'] = $image->storeAs('posts', $fileName, 'public');
         }
 
         $post->update($data);
 
         return redirect()->route('posts.index')->with('success', 'Post actualizado exitosamente.');
     }
-
     public function destroy(Request $request, Post $post): RedirectResponse
     {
         if ($post->image_path) {
@@ -94,4 +103,3 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', 'Post eliminado exitosamente.');
     }
 }
-
