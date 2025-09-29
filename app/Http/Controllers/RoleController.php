@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:roles.index')->only('index');
+        $this->middleware('can:roles.create')->only(['create', 'store']);
+        $this->middleware('can:roles.edit')->only(['edit', 'update']);
+        $this->middleware('can:roles.destroy')->only('destroy');
+    }
+    
     public function index(Request $request): View
     {
         $roles = Role::with('permissions')->get();

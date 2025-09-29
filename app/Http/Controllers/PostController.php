@@ -14,9 +14,20 @@ use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:PostsManager')->except(['listPosts']);
+    }
+
     public function index(Request $request): View
     {
+        // $posts_2 = Post::all();
         $posts = Post::with('category')->get();
+
+        // dd([
+        //     'posts' => $posts,
+        //     'posts_2' => $posts_2,
+        // ]);
 
         return view('post.index', [
             'posts' => $posts,

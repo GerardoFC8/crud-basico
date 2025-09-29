@@ -12,6 +12,14 @@ use Illuminate\View\View;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:permissions.index')->only('index');
+        $this->middleware('can:permissions.create')->only(['create', 'store']);
+        $this->middleware('can:permissions.edit')->only(['edit', 'update']);
+        $this->middleware('can:permissions.destroy')->only('destroy');
+    }
+    
     public function index(Request $request): View
     {
         $permissions = Permission::all();
@@ -25,7 +33,7 @@ class PermissionController extends Controller
 
     public function store(PermissionStoreRequest $request): RedirectResponse
     {
-        $permission = Permission::create($request->validated());
+        Permission::create($request->validated());
 
         return redirect()->route('permissions.index');
     }

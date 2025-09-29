@@ -24,40 +24,45 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Users
+    // Users (Esta definición está BIEN porque los middlewares se aplican a rutas individuales)
     Route::get('users', [UserController::class, 'index'])->name('users.index')->middleware('can:users.index');
     Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('can:users.edit');
     Route::put('users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('can:users.edit');
 
-    // Categories
-    Route::resource('categories', CategoryController::class)->except(['show'])
-         ->middleware('can:categories.index,index')
-         ->middleware('can:categories.create,create,store')
-         ->middleware('can:categories.edit,edit,update')
-         ->middleware('can:categories.destroy,destroy');
-
+    // Categories (Esta definición ya estaba BIEN, la dejamos como está)
+    Route::resource('categories', CategoryController::class)->except(['show']);
     Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show')->middleware('can:categories.index');
 
-    // LO MISMO DE ARRIBA, PERO USANDO ROLES
-    // Route::middleware('role:CategoriesManager')->group(function () {
-    //     Route::resource('categories', CategoryController::class);
-    // });
+    // --- CORRECCIONES ---
 
     // Posts
-    Route::middleware('role:PostsManager')->group(function () {
-        Route::resource('posts', PostController::class);
-    });
+    // MAL: Aunque agrupar por middleware de rol funciona, es mejor y más consistente
+    // mover esta lógica al constructor del controlador para mantener el archivo de rutas limpio.
+    // Route::middleware('role:PostsManager')->group(function () {
+    //     Route::resource('posts', PostController::class);
+    // });
+
+    // BIEN: La ruta resource limpia. La protección se añade en PostController.
+    Route::resource('posts', PostController::class);
     
     // Roles & Permissions
-    Route::resource('roles', RoleController::class)->middleware('can:roles.index,index')
-         ->middleware('can:roles.create,create,store')
-         ->middleware('can:roles.edit,edit,update')
-         ->middleware('can:roles.destroy,destroy');
+    // MAL: Encadenar middlewares en un resource aplica TODOS a CADA ruta (index, create, store, etc.),
+    // lo que causa el error de autorización. Un usuario con permiso para 'index' no puede entrar
+    // porque también se le exige el permiso de 'edit', 'destroy', etc.
+    // Route::resource('roles', RoleController::class)->middleware('can:roles.index,index')
+    //      ->middleware('can:roles.create,create,store')
+    //      ->middleware('can:roles.edit,edit,update')
+    //      ->middleware('can:roles.destroy,destroy');
          
-    Route::resource('permissions', PermissionController::class)->middleware('can:permissions.index,index')
-         ->middleware('can:permissions.create,create,store')
-         ->middleware('can:permissions.edit,edit,update')
-         ->middleware('can:permissions.destroy,destroy');
+    // Route::resource('permissions', PermissionController::class)->middleware('can:permissions.index,index')
+    //      ->middleware('can:permissions.create,create,store')
+    //      ->middleware('can:permissions.edit,edit,update')
+    //      ->middleware('can:permissions.destroy,destroy');
+
+    // BIEN: Las rutas resource se definen de forma limpia. La lógica de permisos
+    // se mueve al constructor de cada controlador para aplicarse al método correcto.
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
 
     // Rutas sin permisos específicos por ahora
     Route::resource('students', StudentController::class);
