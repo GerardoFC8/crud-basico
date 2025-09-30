@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('can:users.index')->only('index');
+        $this->middleware('can:users.edit')->only(['edit', 'update']);
+    }
+    
     public function index(): View
     {
         $users = User::all();

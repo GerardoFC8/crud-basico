@@ -40,7 +40,7 @@
                             @forelse ($students as $student)
                                 <tr>
                                     <td>{{ $student->nombres }}</td>
-                                    <td>{{ $student->correo }}</td>
+                                    <td>{{ $student->email }}</td>
                                     <td>{{ $student->cedula }}</td>
                                     <td>
                                         @php

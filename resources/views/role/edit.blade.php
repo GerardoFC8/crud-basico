@@ -9,13 +9,13 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('roles.update', $role) }}" method="POST">
+            <form method="POST" action="{{ route('roles.update', $role) }}">
                 @csrf
                 @method('PUT')
 
                 <div class="form-group">
-                    <label for="name">Nombre:</label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $role->name) }}" required>
+                    <label for="name">Nombre del Rol</label>
+                    <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $role->name) }}" required>
                     @error('name')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -24,27 +24,26 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="guard_name">Guard:</label>
-                    <input type="text" class="form-control @error('guard_name') is-invalid @enderror" id="guard_name" name="guard_name" value="{{ old('guard_name', $role->guard_name) }}" required>
-                    @error('guard_name')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <label>Guard Name</label>
+                    <p class="form-control-static"><strong>{{ $role->guard_name }}</strong> (No se puede cambiar)</p>
                 </div>
 
                 <div class="form-group">
-                    <label>Permisos:</label>
-                    <div class="row">
-                        @foreach($permissions as $permission)
-                            <div class="col-md-3">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="permission_{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}"
-                                        {{ $role->permissions->contains($permission->id) ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="permission_{{ $permission->id }}">{{ $permission->name }}</label>
+                    <label>Permisos para el guard '{{ $role->guard_name }}'</label>
+                    <div class="permissions-container mt-2">
+                        <div class="row">
+                            @foreach($permissions as $permission)
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="permission_{{ $permission->id }}"
+                                            {{ $role->permissions->contains($permission->id) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="permission_{{ $permission->id }}">
+                                            {{ $permission->name }}
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 

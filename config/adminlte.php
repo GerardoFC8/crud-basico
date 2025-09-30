@@ -352,8 +352,16 @@ return [
                     'can' => 'users.index', // Proteger vista de usuarios
                 ],
                 [
-                    'text' => 'Estudiantes',
-                    'route' => 'students.index',
+                    'text' => 'Alumnos',
+                    'url'  => 'students',
+                    'icon' => 'fas fa-fw fa-lock',
+                    'can'  => 'students.index',
+                ],
+                [
+                    'text' => 'Profesores',
+                    'url'  => 'professors',
+                    'icon' => 'fas fa-fw fa-user-tie',
+                    'can'  => 'professors.index',
                 ],
                 [
                     'text' => 'Categorias',

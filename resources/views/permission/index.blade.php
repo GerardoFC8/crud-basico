@@ -31,6 +31,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
+                        <th>Guard</th>
                         <th width="150px">Acciones</th>
                     </tr>
                 </thead>
@@ -39,6 +40,7 @@
                         <tr>
                             <td>{{ $permission->id }}</td>
                             <td>{{ $permission->name }}</td>
+                            <td>{{ $permission->guard_name }}</td>
                             <td>
                                 <form action="{{ route('permissions.destroy', $permission) }}" method="POST">
                                     <a href="{{ route('permissions.show', $permission) }}" class="btn btn-sm btn-info" title="Ver"><i class="fas fa-eye"></i></a>

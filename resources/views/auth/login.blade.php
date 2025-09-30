@@ -2,8 +2,24 @@
     
     <x-auth-session-status class="mb-4" :status="session('status')" />
     <x-slot:prueba>
+        <p class="login-box-msg">Inicia sesión para comenzar</p>
         <form method="POST" action="{{ route('login') }}">
             @csrf
+
+            <!-- User Type -->
+            <div class="form-group mb-3">
+                 <label for="user_type">Tipo de Usuario</label>
+                <select id="user_type" name="user_type" class="form-control" required>
+                    <option value="web">Administrador</option>
+                    <option value="professor">Profesor</option>
+                    <option value="student">Alumno</option>
+                </select>
+                @error('user_type')
+                    <span class="invalid-feedback d-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
             <!-- Email Address -->
             <div class="mb-3">

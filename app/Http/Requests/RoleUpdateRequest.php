@@ -22,7 +22,7 @@ class RoleUpdateRequest extends FormRequest
     {
         $roleId = $this->route('role')->id;
         return [
-            'name' => ['required', 'string', 'max:125', Rule::unique('roles')->ignore($roleId)],
+            'name' => ['required', 'string', 'max:125'],
             'guard_name' => ['required', 'string', 'max:125'],
             'permissions' => ['sometimes', 'array'],
             'permissions.*' => ['exists:permissions,id'] // Valida que cada ID de permiso exista en la tabla de permisos

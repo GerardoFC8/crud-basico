@@ -28,6 +28,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // El guard ya fue establecido en el LoginRequest
+        // Laravel recordará el guard con el que se inició sesión.
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -36,7 +38,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        $guard = 'web'; // Por defecto
+        if (Auth::guard('professor')->check()) {
+            $guard = 'professor';
+        } elseif (Auth::guard('student')->check()) {
+            $guard = 'student';
+        }
+
+        Auth::guard($guard)->logout();
 
         $request->session()->invalidate();
 

@@ -20,7 +20,7 @@ class RoleStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:125', 'unique:roles,name'],
+            'name' => ['required', 'string', 'max:125'],
             'guard_name' => ['required', 'string', 'max:125'],
             'permissions' => ['sometimes', 'array'],
             'permissions.*' => ['exists:permissions,id'] // Valida que cada ID de permiso exista en la tabla de permisos

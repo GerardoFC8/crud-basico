@@ -21,6 +21,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
+                        <th>Guard</th>
                         <th width="150px">Acciones</th>
                     </tr>
                 </thead>
@@ -29,6 +30,7 @@
                         <tr>
                             <td>{{ $role->id }}</td>
                             <td>{{ $role->name }}</td>
+                            <td>{{ $role->guard_name }}</td>
                             <td>
                                 <form action="{{ route('roles.destroy', $role) }}" method="POST">
                                     <a href="{{ route('roles.show', $role) }}" class="btn btn-sm btn-info" title="Ver"><i class="fas fa-eye"></i></a>

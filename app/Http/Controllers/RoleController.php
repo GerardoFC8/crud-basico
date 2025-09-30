@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {
@@ -33,7 +34,9 @@ class RoleController extends Controller
     public function create(Request $request): View
     {
         $permissions = Permission::all();
-        return view('role.create', compact('permissions'));
+        $guards = array_keys(config('auth.guards'));
+
+        return view('role.create', compact('permissions', 'guards'));
     }
 
     public function store(RoleStoreRequest $request): RedirectResponse
@@ -45,6 +48,8 @@ class RoleController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            // Log the error for debugging
+            Log::error('Error creating role: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ocurrió un error al crear el rol.');
         }
 
@@ -61,7 +66,8 @@ class RoleController extends Controller
 
     public function edit(Request $request, Role $role): View
     {
-        $permissions = Permission::all();
+        // Solo obtenemos los permisos que pertenecen al mismo guard que el rol
+        $permissions = Permission::where('guard_name', $role->guard_name)->get();
         $role->load('permissions'); // Carga los permisos asociados a este rol
 
         return view('role.edit', [
@@ -74,12 +80,15 @@ class RoleController extends Controller
     {
         DB::beginTransaction();
         try {
-            $role->update($request->only('name', 'guard_name'));
+            // Actualizamos solo el nombre, el guard no debería cambiar una vez creado.
+            $role->update($request->only('name'));
 
             $role->permissions()->sync($request->input('permissions', []));
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            // Log the error for debugging
+            Log::error('Error updating role: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ocurrió un error al actualizar el rol.');
         }
 

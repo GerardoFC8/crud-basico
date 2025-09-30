@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-class Student extends Authenticatable
+class Professor extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
 
@@ -16,22 +16,25 @@ class Student extends Authenticatable
      *
      * @var string
      */
-    protected $guard = 'student';
-
+    protected $guard = 'professor';
+    
     /**
      * El guard_name que Spatie debe usar.
      */
-    protected string $guard_name = 'student';
+    protected string $guard_name = 'professor';
 
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'email',
-        'phone',
-        'status',
         'password',
     ];
-    
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -53,15 +56,5 @@ class Student extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    /**
-     * Get the user's full name.
-     *
-     * @return string
-     */
-    public function getNameAttribute()
-    {
-        return "{$this->first_name} {$this->last_name}";
     }
 }
