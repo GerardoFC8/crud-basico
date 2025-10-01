@@ -42,17 +42,15 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'users', // Este es para el admin
         ],
-        // Nuevo guard para Profesores
         'professor' => [
             'driver' => 'session',
-            'provider' => 'professors',
+            'provider' => 'users', // <-- CAMBIO AQUÍ
         ],
-        // Nuevo guard para Alumnos
         'student' => [
             'driver' => 'session',
-            'provider' => 'students',
+            'provider' => 'users', // <-- CAMBIO AQUÍ
         ],
     ],
 
@@ -77,16 +75,6 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => User::class,
-        ],
-        // Nuevo provider para Profesores
-        'professors' => [
-            'driver' => 'eloquent',
-            'model' => Professor::class,
-        ],
-        // Nuevo provider para Alumnos
-        'students' => [
-            'driver' => 'eloquent',
-            'model' => Student::class,
         ],
     ],
 
@@ -116,18 +104,18 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'professors' => [
-            'provider' => 'professors',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'students' => [
-            'provider' => 'students',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
+        // 'professors' => [
+        //     'provider' => 'professors',
+        //     'table' => 'password_reset_tokens',
+        //     'expire' => 60,
+        //     'throttle' => 60,
+        // ],
+        // 'students' => [
+        //     'provider' => 'students',
+        //     'table' => 'password_reset_tokens',
+        //     'expire' => 60,
+        //     'throttle' => 60,
+        // ],
     ],
 
     /*

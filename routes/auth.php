@@ -56,4 +56,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('select-role', [AuthenticatedSessionController::class, 'showSelectRoleForm'])
+        ->name('auth.select-role');
+    Route::post('select-role', [AuthenticatedSessionController::class, 'storeSelectedRole'])
+        ->name('auth.store-role');
 });

@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
-use App\Models\Professor;
-use App\Models\Student;
 
 class LoginRequest extends FormRequest
 {
@@ -32,7 +29,6 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            'user_type' => ['required', 'string', 'in:web,professor,student'], // Validamos el tipo de usuario
         ];
     }
 
@@ -44,10 +40,9 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-        
-        $guard = $this->input('user_type', 'web'); // Obtenemos el guard del formulario
 
-        if (! Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Ahora siempre usamos el guard 'web' porque todos están en la tabla 'users'
+        if (! Auth::guard('web')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

@@ -257,7 +257,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard', // Cambiado a 'dashboard' para coincidir con la ruta
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -316,129 +316,66 @@ return [
 
         // Sidebar items:
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Dashboard',
+            'route' => 'dashboard',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
         ],
+        
+        ['header' => 'GESTIÓN DE CONTENIDO'],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
+            'text' => 'Publicaciones',
+            'icon' => 'fas fa-fw fa-newspaper',
+            'can'  => 'posts.index', // Solo visible si puede listar posts
+            'submenu' => [
+                [
+                    'text' => 'Ver Todas',
+                    'route' => 'posts.index',
+                    'can' => 'posts.index',
+                ],
+                [
+                    'text' => 'Crear Nueva',
+                    'route' => 'posts.create',
+                    'can' => 'posts.create',
+                ],
+                [
+                    'text' => 'Categorías',
+                    'route' => 'categories.index',
+                    'can' => 'categories.index',
+                ],
+            ]
         ],
-        // [
-        //     'text' => 'pages',
-        //     'url' => 'admin/pages',
-        //     'icon' => 'far fa-fw fa-file',
-        //     'label' => 4,
-        //     'label_color' => 'success',
-        // ],
-        ['header' => 'account_settings'],
+
+        ['header' => 'ADMINISTRACIÓN'],
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text' => 'Administración',
-            'icon' => 'fas fa-fw fa-share',
+            'text' => 'Gestión de Usuarios',
+            'icon' => 'fas fa-fw fa-users-cog',
             'submenu' => [
                 [
                     'text' => 'Usuarios',
                     'route' => 'users.index',
+                    'icon' => 'fas fa-fw fa-user',
                     'can' => 'users.index', // Proteger vista de usuarios
-                ],
-                [
-                    'text' => 'Alumnos',
-                    'url'  => 'students',
-                    'icon' => 'fas fa-fw fa-lock',
-                    'can'  => 'students.index',
-                ],
-                [
-                    'text' => 'Profesores',
-                    'url'  => 'professors',
-                    'icon' => 'fas fa-fw fa-user-tie',
-                    'can'  => 'professors.index',
-                ],
-                [
-                    'text' => 'Categorias',
-                    'route' => 'categories.index',
-                    'can' => 'categories.index', // Proteger vista de categorías
-                ],
-                [
-                    'text' => 'Publicaciones',
-                    'route' => 'posts.index',
-                    'can' => 'posts.index', // Proteger vista de posts
                 ],
                 [
                     'text' => 'Roles',
                     'route' => 'roles.index',
+                    'icon' => 'fas fa-fw fa-user-shield',
                     'can' => 'roles.index', // Proteger vista de roles
                 ],
                 [
                     'text' => 'Permisos',
                     'route' => 'permissions.index',
+                    'icon' => 'fas fa-fw fa-key',
                     'can' => 'permissions.index', // Proteger vista de permisos
                 ],
-                // [
-                //     'text' => 'level_one',
-                //     'url' => '#',
-                //     'submenu' => [
-                //         [
-                //             'text' => 'level_two',
-                //             'url' => '#',
-                //         ],
-                //         [
-                //             'text' => 'level_two',
-                //             'url' => '#',
-                //             'submenu' => [
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url' => '#',
-                //                 ],
-                //                 [
-                //                     'text' => 'level_three',
-                //                     'url' => '#',
-                //                 ],
-                //             ],
-                //         ],
-                //     ],
-                // ],
-                // [
-                //     'text' => 'level_one',
-                //     'url' => '#',
-                // ],
-            ],
-        ],
-        [
-            'text' => 'Ver Publicaciones',
-            'icon' => 'fas fa-solid fa-newspaper',
-            'submenu' => [
                 [
-                    'text' => 'Lista de Publicaciones',
-                    'route' => 'posts.list',
+                    'text' => 'Tipos de Usuario',
+                    'route'  => 'user-types.index',
+                    'icon' => 'fas fa-fw fa-book',
+                    'can' => 'users.index', // Asumimos que solo admins pueden ver esto
                 ],
-            ],
+            ]
         ],
-        // ['header' => 'labels'],
-        // [
-        //     'text' => 'important',
-        //     'icon_color' => 'red',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'warning',
-        //     'icon_color' => 'yellow',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'information',
-        //     'icon_color' => 'cyan',
-        //     'url' => '#',
-        // ],
     ],
 
     /*

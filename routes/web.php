@@ -8,6 +8,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserTypeController;
 use App\Livewire\StudentManager;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,8 @@ Route::middleware(['auth:web'])->group(function () {
     Route::resource('posts', PostController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
-    Route::resource('users', UserController::class)->except(['create','store']);
+    Route::resource('users', UserController::class); // <-- Permitir todas las acciones
+    Route::resource('user-types', UserTypeController::class); // <-- Añadir ruta para tipos
 });
 
 // Rutas Públicas de Posts
