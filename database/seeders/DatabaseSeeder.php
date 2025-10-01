@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Professor;
 use App\Models\Student;
+use App\Models\UserType;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,10 +23,16 @@ class DatabaseSeeder extends Seeder
         Professor::where('email', 'professor@example.com')->delete();
         Student::where('email', 'student@example.com')->delete();
 
+        $type_users = ['Administrador', 'PostsManager', 'Profesor', 'Alumno'];
+        foreach ($type_users as $type) {
+            UserType::firstOrCreate(['name' => $type]);
+        }
+
         // --- Usuario Administrador ---
         $adminUser = User::factory()->create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
+            'user_type_id' => UserType::where('name', 'Administrador')->first()->id,
         ]);
         $adminUser->assignRole('Admin');
 
