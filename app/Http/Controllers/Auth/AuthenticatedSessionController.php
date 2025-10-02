@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use App\Models\User;
+use Spatie\Permission\Models\Role; // <-- Importar el modelo Role
 
 class AuthenticatedSessionController extends Controller
 {
@@ -34,23 +35,17 @@ class AuthenticatedSessionController extends Controller
         $user->load('userType', 'roles');
 
         // LÓGICA DE REDIRECCIÓN PERSONALIZADA
-        // 1. Si es tipo 'Administrativo' (o el nombre que definas) y tiene más de un rol
+        // 1. Si es tipo 'Administrador' y tiene más de un rol
         if ($user->userType && $user->userType->name === 'Administrador' && $user->roles->count() > 1) {
             // Guardamos el ID del usuario que necesita elegir rol y lo enviamos a la pantalla de selección
             $request->session()->put('auth.user_id_select_role', $user->id);
             return redirect()->route('auth.select-role');
         }
 
-        // 2. Si tiene un solo rol, intenta redirigir a un dashboard específico (opcional)
-        if ($user->roles->count() === 1) {
-            $roleName = $user->roles->first()->name;
-            if ($roleName === 'Profesor') {
-                return redirect()->route('professors.dashboard'); // Asume que tienes esta ruta
-            }
-            // Puedes añadir más `if` para otros roles
-        }
+        // CAMBIO: Eliminada la redirección específica para 'Profesor' para simplificar.
+        // Ahora, si no necesita seleccionar rol, siempre irá al dashboard principal.
 
-        // 3. Redirección por defecto si no se cumplen las condiciones anteriores
+        // 3. Redirección por defecto
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -95,8 +90,12 @@ class AuthenticatedSessionController extends Controller
             ],
         ]);
 
-        // Guardar el rol activo en la sesión
-        $request->session()->put('active_role', $request->role);
+        // Buscamos el objeto Role para obtener su ID
+        $selectedRole = Role::findByName($request->role, 'web');
+
+        // Guardar el nombre y el ID del rol activo en la sesión
+        $request->session()->put('active_role_name', $selectedRole->name);
+        $request->session()->put('active_role_id', $selectedRole->id);
 
         // Limpiar la variable de sesión para que no se le pregunte de nuevo
         $request->session()->forget('auth.user_id_select_role');

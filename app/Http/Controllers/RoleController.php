@@ -43,9 +43,11 @@ class RoleController extends Controller
     {
         DB::beginTransaction();
         try {
+            
             $role = Role::create($request->only('name', 'guard_name'));
             $role->permissions()->sync($request->input('permissions', []));
             DB::commit();
+
         } catch (\Exception $e) {
             DB::rollBack();
             // Log the error for debugging

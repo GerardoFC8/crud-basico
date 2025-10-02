@@ -25,6 +25,11 @@ class Post extends Model
         'views_count',
         'published_at',
         'category_id',
+        'tags',
+        'meta_data',
+        'gallery_images',
+        'author_info',
+        'manual_created_at', // Campo nuevo
     ];
 
     /**
@@ -37,8 +42,13 @@ class Post extends Model
         return [
             'id' => 'integer',
             'is_featured' => 'boolean',
-            'published_at' => 'timestamp',
+            'published_at' => 'datetime', // Aseguramos que se trate como objeto Carbon
             'category_id' => 'integer',
+            'tags' => 'array',
+            'meta_data' => 'collection',
+            'gallery_images' => 'array',
+            'author_info' => 'object',
+            'manual_created_at' => 'datetime', // Campo nuevo
         ];
     }
 

@@ -17,13 +17,10 @@
 
 @section('content')
     <div class="card">
-
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
                 <strong>¡Éxito!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
         @endif
         
@@ -35,6 +32,7 @@
                         <th>Imagen</th>
                         <th>Título</th>
                         <th>Categoría</th>
+                        <th>Tags</th>
                         <th>Estado</th>
                         <th>Destacado</th>
                         <th width="150px">Acciones</th>
@@ -54,32 +52,30 @@
                             <td>{{ $post->title }}</td>
                             <td>{{ $post->category->name ?? 'N/A' }}</td>
                             <td>
-                                @if($post->status == 'published')
-                                    <span class="badge badge-success">Publicado</span>
-                                @elseif($post->status == 'draft')
-                                    <span class="badge badge-secondary">Borrador</span>
-                                @else
-                                    <span class="badge badge-warning">Archivado</span>
+                                @if($post->tags)
+                                    @foreach($post->tags as $tag)
+                                        <span class="badge badge-secondary">{{ $tag }}</span>
+                                    @endforeach
                                 @endif
                             </td>
                             <td>
-                                @if($post->is_featured)
-                                    <span class="badge badge-primary">Sí</span>
-                                @else
-                                    <span class="badge badge-light">No</span>
+                                @if($post->status == 'published')<span class="badge badge-success">Publicado</span>
+                                @elseif($post->status == 'draft')<span class="badge badge-secondary">Borrador</span>
+                                @else<span class="badge badge-warning">Archivado</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($post->is_featured)<span class="badge badge-primary">Sí</span>
+                                @else<span class="badge badge-light">No</span>
                                 @endif
                             </td>
                             <td>
                                 <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este post?');">
                                     <a href="{{ route('posts.show', $post) }}" class="btn btn-sm btn-info" title="Ver"><i class="fas fa-eye"></i></a>
-                                    @can('posts.edit')
-                                    <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-primary" title="Editar"><i class="fas fa-edit"></i></a>
-                                    @endcan
+                                    @can('posts.edit')<a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-primary" title="Editar"><i class="fas fa-edit"></i></a>@endcan
                                     @csrf
                                     @method('DELETE')
-                                    @can('posts.destroy')
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>
-                                    @endcan
+                                    @can('posts.destroy')<button type="submit" class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash"></i></button>@endcan
                                 </form>
                             </td>
                         </tr>
@@ -98,7 +94,7 @@
                     "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
                 },
                 "columnDefs": [
-                    { "orderable": false, "targets": [1, 6] } // Deshabilitar orden en columnas de imagen y acciones
+                    { "orderable": false, "targets": [1, 7] } // Deshabilitar orden en columnas de imagen y acciones
                 ]
             });
         });

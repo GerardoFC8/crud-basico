@@ -349,6 +349,7 @@ return [
         [
             'text' => 'Gestión de Usuarios',
             'icon' => 'fas fa-fw fa-users-cog',
+            'can'  => 'users.index',
             'submenu' => [
                 [
                     'text' => 'Usuarios',
