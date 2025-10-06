@@ -24,7 +24,8 @@ class UserController extends Controller
     public function index(): View
     {
         $users = User::with('userType', 'roles')->get();
-        return view('user.index', compact('users'));
+        $data = User::all();
+        return view('user.index', compact('users', 'data'));
     }
 
     public function create(): View
@@ -96,5 +97,13 @@ class UserController extends Controller
 
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Usuario eliminado correctamente.');
+    }
+
+    public function showJson(User $user)
+    {
+        // Carga la relación de roles para incluirla en la respuesta
+        $user->load('roles');
+
+        return response()->json($user);
     }
 }

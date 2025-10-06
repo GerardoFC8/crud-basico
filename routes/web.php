@@ -30,6 +30,8 @@ Route::middleware(['auth:web'])->group(function () {
     Route::resource('permissions', PermissionController::class);
     Route::resource('users', UserController::class); // <-- Permitir todas las acciones
     Route::resource('user-types', UserTypeController::class); // <-- Añadir ruta para tipos
+
+    Route::get('/users/{user}/json', [UserController::class, 'showJson'])->name('users.show.json');
 });
 
 // Rutas Públicas de Posts
@@ -40,6 +42,5 @@ Route::get('/blog/{post}', function (Post $post) {
     }
     return view('post.show-public', compact('post'));
 })->name('posts.public.show');
-
 
 require __DIR__.'/auth.php';
