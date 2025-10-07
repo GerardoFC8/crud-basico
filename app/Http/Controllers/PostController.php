@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PostsExport;
 use App\Http\Requests\PostStoreRequest;
 use App\Http\Requests\PostUpdateRequest;
 use App\Models\Category;
 use App\Models\Post;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PostController extends Controller
 {
@@ -69,7 +72,9 @@ class PostController extends Controller
 
         $this->handleComplexData($request, $data);
 
+        $data['user_id'] = Auth::id(); // Asignar el ID del usuario autenticado
         Post::create($data);
+
         return redirect()->route('posts.index')->with('success', 'Post creado exitosamente.');
     }
 
@@ -155,5 +160,82 @@ class PostController extends Controller
         if (empty($data['author_info']['name']) && empty($data['author_info']['role'])) {
             $data['author_info'] = null;
         }
+    }
+
+    public function generatePDF()
+    {
+        // Obtenemos todos los posts con sus relaciones de categoría y usuario
+        // Eager loading para optimizar consultas
+        $posts = Post::with(['category', 'user'])->get();
+
+        $data = [
+            'title' => 'Reporte General de Posts',
+            'date' => date('d/m/Y H:i:s'),
+            'posts' => $posts
+        ];
+
+        // Carga la vista 'posts-pdf' y le pasa los datos
+        $pdf = Pdf::loadView('post.posts-pdf', $data);
+
+        // Opcional: Configurar tamaño
+        $pdf->setPaper('A4');
+
+        // Descargar el PDF con un nombre de archivo específico
+        // return $pdf->download('reporte-posts.pdf');
+        
+        // O si quieres mostrarlo en el navegador sin descargarlo directamente:
+        return $pdf->stream('reporte-posts.pdf');
+    }
+
+    public function generatePostPDF(Post $post)
+    {
+        // Definimos la ruta donde se guardarán los PDFs cacheados
+        $pdfPath = "posts_pdf/post-{$post->id}.pdf";
+        $disk = Storage::disk('public');
+
+        // Lógica de caché
+        // Comparamos el timestamp de actualización del post con el de modificación del archivo PDF
+        $postTimestamp = $post->updated_at->timestamp;
+        
+        // Por defecto, asumimos que hay que regenerar el PDF
+        $shouldRegenerate = true;
+
+        if ($disk->exists($pdfPath)) {
+            $pdfTimestamp = $disk->lastModified($pdfPath);
+            
+            // Si el PDF es más reciente o igual de antiguo que el post, no regeneramos
+            if ($pdfTimestamp >= $postTimestamp) {
+                $shouldRegenerate = false;
+            }
+        }
+
+        // Si el archivo no existe o está desactualizado, lo generamos y guardamos
+        if ($shouldRegenerate) {
+            // Cargamos las relaciones para el PDF
+            $post->load('user', 'category');
+
+            $data = ['post' => $post];
+            
+            $pdf = Pdf::loadView('post.post-detail-pdf', $data);
+            
+            // Guardamos el contenido del PDF en el disco
+            $disk->put($pdfPath, $pdf->output());
+        }
+
+        // Finalmente, servimos el archivo (ya sea el recién creado o el que ya existía)
+        // Usamos la ruta completa del storage para que el response lo encuentre
+        $fullPath = storage_path("app/public/{$pdfPath}");
+        
+        return response()->file($fullPath);
+    }
+
+    public function exportExcel() 
+    {
+        return Excel::download(new PostsExport, 'posts.xlsx');
+    }
+
+    public function exportPostExcel(Post $post) 
+    {
+        return Excel::download(new PostsExport($post->id), 'post-'.$post->id.'.xlsx');
     }
 }

@@ -33,7 +33,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn(['tags', 'meta_data', 'gallery_images', 'author_info']);
+            $table->dropColumn(['tags', 'meta_data', 'gallery_images', 'author_info', 'manual_created_at']);
         });
     }
 };
