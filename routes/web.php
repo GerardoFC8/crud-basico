@@ -51,3 +51,4 @@ Route::get('/blog/{post}', function (Post $post) {
 })->name('posts.public.show');
 
 require __DIR__.'/auth.php';
+require __DIR__.'/profesores.php';

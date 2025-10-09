@@ -3,7 +3,9 @@
 namespace App\Exports;
 
 use App\Models\Post;
+use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -13,10 +15,11 @@ use Maatwebsite\Excel\Concerns\WithDrawings;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
-class PostsExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, WithDrawings, WithCustomStartCell
+// class PostsExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithEvents, WithDrawings, WithCustomStartCell
+class PostsExport implements FromView, ShouldAutoSize
 {
     protected $postId;
-    private $postsCollection;
+    protected $postsCollection;
 
     /**
     * @param int|null $postId
@@ -35,103 +38,111 @@ class PostsExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
-    {
-        return $this->postsCollection;
-    }
+    // public function collection()
+    // {
+    //     return $this->postsCollection;
+    // }
 
     /**
      * Define la celda donde comenzará la tabla de datos.
      */
-    public function startCell(): string
-    {
-        return 'A7';
-    }
+    // public function startCell(): string
+    // {
+    //     return 'A7';
+    // }
 
     /**
      * Añade imágenes a la hoja de cálculo.
      */
-    public function drawings()
-    {
-        $drawing = new Drawing();
-        $drawing->setName('Logo');
-        $drawing->setDescription('Logo de la Empresa');
-        // Asegúrate de tener una imagen en esta ruta o cámbiala
-        $drawing->setPath(public_path('/vendor/adminlte/dist/img/AdminLTELogo.png'));
-        $drawing->setHeight(60);
-        $drawing->setCoordinates('B2');
+    // public function drawings()
+    // {
+    //     $drawing = new Drawing();
+    //     $drawing->setName('Logo');
+    //     $drawing->setDescription('Logo de la Empresa');
+    //     // Asegúrate de tener una imagen en esta ruta o cámbiala
+    //     $drawing->setPath(public_path('/vendor/adminlte/dist/img/AdminLTELogo.png'));
+    //     $drawing->setHeight(60);
+    //     $drawing->setCoordinates('B2');
 
-        return $drawing;
-    }
+    //     return $drawing;
+    // }
 
-    public function headings(): array
-    {
-        return [
-            'ID',
-            'Título',
-            'Categoría',
-            'Autor',
-            'Estado',
-            'Tags',
-            'Fecha de Creación',
-        ];
-    }
+    // public function headings(): array
+    // {
+    //     return [
+    //         'ID',
+    //         'Título',
+    //         'Categoría',
+    //         'Autor',
+    //         'Estado',
+    //         'Tags',
+    //         'Fecha de Creación',
+    //     ];
+    // }
 
-    public function map($post): array
-    {
-        return [
-            $post->id,
-            $post->title,
-            $post->category->name ?? 'N/A',
-            $post->user->name ?? 'N/A',
-            ucfirst($post->status),
-            $post->tags ? implode(', ', $post->tags) : '',
-            $post->created_at->format('d/m/Y H:i:s'),
-        ];
-    }
+    // public function map($post): array
+    // {
+    //     return [
+    //         $post->id,
+    //         $post->title,
+    //         $post->category->name ?? 'N/A',
+    //         $post->user->name ?? 'N/A',
+    //         ucfirst($post->status),
+    //         $post->tags ? implode(', ', $post->tags) : '',
+    //         $post->created_at->format('d/m/Y H:i:s'),
+    //     ];
+    // }
 
     /**
      * Registra eventos para aplicar estilos dinámicos.
      */
-    public function registerEvents(): array
+    // public function registerEvents(): array
+    // {
+    //     return [
+    //         AfterSheet::class => function(AfterSheet $event) {
+    //             // Combinar celdas para el título principal
+    //             $event->sheet->mergeCells('B5:F5');
+    //             $event->sheet->setCellValue('B5', 'REPORTE DE PUBLICACIONES');
+    //             $event->sheet->getStyle('B5')->getFont()->setBold(true)->setSize(16);
+    //             $event->sheet->getStyle('B5')->getAlignment()->setHorizontal('center');
+
+    //             // Estilo para la cabecera de la tabla (fila 7)
+    //             $event->sheet->getStyle('A7:G7')->applyFromArray([
+    //                 'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+    //                 'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '333333']]
+    //             ]);
+
+    //             // Aplicar estilos condicionales a las filas de datos
+    //             foreach ($this->postsCollection as $index => $post) {
+    //                 $rowNumber = $index + 8; // 7 (startCell) + 1 (header)
+    //                 $color = null;
+
+    //                 switch ($post->status) {
+    //                     case 'published':
+    //                         $color = 'C6EFCE'; // Verde claro
+    //                         break;
+    //                     case 'draft':
+    //                         $color = 'FFEB9C'; // Amarillo claro
+    //                         break;
+    //                     case 'archived':
+    //                         $color = 'FFC7CE'; // Rojo claro
+    //                         break;
+    //                 }
+
+    //                 if ($color) {
+    //                     $event->sheet->getStyle("A{$rowNumber}:G{$rowNumber}")->getFill()
+    //                         ->setFillType('solid')->getStartColor()->setRGB($color);
+    //                 }
+    //             }
+    //         },
+    //     ];
+    // }
+
+    public function view(): View
     {
-        return [
-            AfterSheet::class => function(AfterSheet $event) {
-                // Combinar celdas para el título principal
-                $event->sheet->mergeCells('B5:F5');
-                $event->sheet->setCellValue('B5', 'REPORTE DE PUBLICACIONES');
-                $event->sheet->getStyle('B5')->getFont()->setBold(true)->setSize(16);
-                $event->sheet->getStyle('B5')->getAlignment()->setHorizontal('center');
-
-                // Estilo para la cabecera de la tabla (fila 7)
-                $event->sheet->getStyle('A7:G7')->applyFromArray([
-                    'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-                    'fill' => ['fillType' => 'solid', 'startColor' => ['rgb' => '333333']]
-                ]);
-
-                // Aplicar estilos condicionales a las filas de datos
-                foreach ($this->postsCollection as $index => $post) {
-                    $rowNumber = $index + 8; // 7 (startCell) + 1 (header)
-                    $color = null;
-
-                    switch ($post->status) {
-                        case 'published':
-                            $color = 'C6EFCE'; // Verde claro
-                            break;
-                        case 'draft':
-                            $color = 'FFEB9C'; // Amarillo claro
-                            break;
-                        case 'archived':
-                            $color = 'FFC7CE'; // Rojo claro
-                            break;
-                    }
-
-                    if ($color) {
-                        $event->sheet->getStyle("A{$rowNumber}:G{$rowNumber}")->getFill()
-                            ->setFillType('solid')->getStartColor()->setRGB($color);
-                    }
-                }
-            },
-        ];
+        // Pasamos la colección de posts a la vista
+        return view('exports.posts', [
+            'posts' => $this->postsCollection
+        ]);
     }
 }

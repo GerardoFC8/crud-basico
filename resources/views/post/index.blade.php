@@ -37,6 +37,7 @@
 
         {{-- {{ public_path('storage/posts/1759854165-rm378-07jpg.jpg') }}
         <img src="{{ public_path('storage/posts/1759854165-rm378-07jpg.jpg') }}" class="main-image">
+        {{ asset('storage/posts/1759854165-rm378-07jpg.jpg') }}
         <img src="{{ asset('storage/posts/1759854165-rm378-07jpg.jpg') }}" class="main-image">
         <br>
         {{ storage_path() }}
