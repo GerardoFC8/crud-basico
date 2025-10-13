@@ -52,3 +52,5 @@ Route::get('/blog/{post}', function (Post $post) {
 
 require __DIR__.'/auth.php';
 require __DIR__.'/profesores.php';
+
+Route::resource('notices', App\Http\Controllers\NoticeController::class);

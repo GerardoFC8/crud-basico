@@ -1,29 +1,25 @@
 created:
-    - app/Http/Controllers/RoleController.php
-    - app/Http/Controllers/PermissionController.php
-    - database/factories/RoleFactory.php
-    - database/factories/PermissionFactory.php
-    - app/Models/Role.php
-    - app/Models/Permission.php
-    - tests/Feature/Http/Controllers/RoleControllerTest.php
-    - tests/Feature/Http/Controllers/PermissionControllerTest.php
-    - app/Http/Requests/RoleStoreRequest.php
-    - app/Http/Requests/RoleUpdateRequest.php
-    - app/Http/Requests/PermissionStoreRequest.php
-    - app/Http/Requests/PermissionUpdateRequest.php
-    - resources/views/role/index.blade.php
-    - resources/views/role/create.blade.php
-    - resources/views/role/show.blade.php
-    - resources/views/role/edit.blade.php
-    - resources/views/permission/index.blade.php
-    - resources/views/permission/create.blade.php
-    - resources/views/permission/show.blade.php
-    - resources/views/permission/edit.blade.php
+    - app/Http/Controllers/NoticeController.php
+    - database/factories/NoticeFactory.php
+    - database/migrations/2025_10_13_203909_create_notices_table.php
+    - app/Models/Notice.php
+    - tests/Feature/Http/Controllers/NoticeControllerTest.php
+    - app/Http/Requests/NoticeStoreRequest.php
+    - app/Http/Requests/NoticeUpdateRequest.php
+    - resources/views/notice/index.blade.php
+    - resources/views/notice/create.blade.php
+    - resources/views/notice/show.blade.php
+    - resources/views/notice/edit.blade.php
+    - resources/views/notice/test.blade.php
 updated:
     - routes/web.php
 models:
-    Student: { nombres: 'string:100', correo: 'string:100 unique', cedula: 'string:20 unique', edad: 'integer nullable', telefono: 'string:20 nullable', direccion: 'string nullable', status: 'enum:activo,inactivo,graduado default:activo', softdeletes: softDeletes }
-    Category: { name: 'string:100 unique', description: 'text nullable' }
-    Post: { title: "string:255 default:'Untitled Post'", content: longtext, status: "enum:['draft', 'published', 'archived'] default:'draft'", is_featured: 'boolean default:false', views_count: 'integer unsigned default:0', published_at: 'timestamp nullable', softdeletes: softDeletes, relationships: { belongsTo: Category } }
-    Role: { name: 'string:125', guard_name: 'string:125', relationships: { belongsToMany: Permission } }
-    Permission: { name: 'string:125', guard_name: 'string:125' }
+    Category: { name: 'string:100', description: 'text nullable' }
+    Permission: { name: string, guard_name: string }
+    Post: { title: 'string default:Untitled Post', content: longtext, tags: 'json nullable', meta_data: 'json nullable', gallery_images: 'json nullable', author_info: 'json nullable', image_path: 'string nullable', status: "enum:'draft','published','archived' default:draft", category_id: 'biginteger unsigned', user_id: 'biginteger unsigned', is_featured: 'boolean nullable', views_count: 'integer unsigned nullable', published_at: 'timestamp nullable', manual_created_at: 'timestamp nullable' }
+    Professor: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
+    Role: { name: string, guard_name: string }
+    Student: { nombres: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable', cedula: string, edad: 'integer nullable', telefono: 'string nullable', direccion: 'string nullable', status: "enum:'activo','inactivo','graduado' default:activo" }
+    User: { user_type_id: 'biginteger unsigned nullable', name: string, email: string, email_verified_at: 'timestamp nullable', password: string, user_type: 'string default:student', remember_token: 'string:100 nullable' }
+    UserType: { name: string, description: 'text nullable' }
+    Notice: { title: 'string:255', slug: 'string:255 unique', summary: text, content: longtext, image: 'string:255 nullable', source: 'string:255 nullable', tags: 'text nullable', status: 'enum:draft,published,archived default:draft', published_at: 'timestamp nullable', user_id: foreignId, category_id: foreignId, relationships: { belongsTo: 'User, Category' } }

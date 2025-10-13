@@ -328,14 +328,14 @@ return [
             'can'  => 'posts.index', // Solo visible si puede listar posts
             'submenu' => [
                 [
-                    'text' => 'Ver Todas',
+                    'text' => 'Posts',
                     'route' => 'posts.index',
                     'can' => 'posts.index',
                 ],
                 [
-                    'text' => 'Crear Nueva',
-                    'route' => 'posts.create',
-                    'can' => 'posts.create',
+                    'text' => 'Noticias',
+                    'route' => 'notices.index',
+                    // 'can' => 'posts.create',
                 ],
                 [
                     'text' => 'Categorías',

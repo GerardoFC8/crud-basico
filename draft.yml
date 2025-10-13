@@ -1,16 +1,58 @@
-models:
-  Role:
-    name: string:125
-    guard_name: string:125
-    relationships:
-      belongsToMany: Permission
+# Este archivo define el esqueleto para un CRUD completo de Noticias.
+# Ejecutar: php artisan blueprint:build
 
-  Permission:
-    name: string:125
-    guard_name: string:125
+models:
+  Notice:
+    title: string:255
+    slug: string:255 unique
+    summary: text
+    content: longtext
+    image: string:255 nullable
+    source: string:255 nullable
+    tags: text nullable # Para guardar tags como "tecnologia, laravel, php"
+    status: enum:draft,published,archived default:draft
+    published_at: timestamp nullable
+    user_id: foreignId
+    category_id: foreignId
+    relationships:
+      belongsTo: User Category
 
 controllers:
-  Role:
-    resource: web
-  Permission:
-    resource: web
+  Notice:
+    # Blueprint generará un controlador con métodos para cada una de estas acciones.
+    index:
+      query: all:Notice
+      render: notice.index with:notices
+
+    create:
+      query: all:Category
+      render: notice.create with:categories
+
+    store:
+      # Blueprint usará las reglas de la sección 'requests.store' para crear un FormRequest
+      # y lo inyectará en este método.
+      validate: store
+      # El 'from-request' llena el modelo con los datos validados.
+      save: notice from-request
+      flash: success
+      redirect: notice.index
+
+    show:
+      render: notice.show with:notice
+
+    edit:
+      query: all:Category
+      render: notice.edit with:notice categories
+
+    update:
+      # Igual que en 'store', pero para la actualización.
+      validate: update
+      update: notice from-request
+      redirect: notice.show with:notice
+
+    destroy:
+      delete: notice
+      redirect: notice.index
+
+    test:
+      render: notice.test with:notice
