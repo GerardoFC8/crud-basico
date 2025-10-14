@@ -42,7 +42,8 @@ Route::middleware(['auth:web'])->group(function () {
 });
 
 // Rutas Públicas de Posts
-Route::get('list-posts', [PostController::class, 'listPosts'])->name('posts.list');
+Route::get('listas-de-publicaciones', [PostController::class, 'listPosts'])->name('posts.list');
+
 Route::get('/blog/{post}', function (Post $post) {
     if ($post->status !== 'published') {
         abort(404);
@@ -54,3 +55,10 @@ require __DIR__.'/auth.php';
 require __DIR__.'/profesores.php';
 
 Route::resource('notices', App\Http\Controllers\NoticeController::class);
+// notices.index
+// notices.create
+// notices.store
+// notices.show
+// notices.edit
+// notices.update
+// notices.destroy

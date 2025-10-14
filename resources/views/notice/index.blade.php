@@ -22,7 +22,7 @@
             </div>
         @endif
 
-        <div class="card-body">
+        <div class="card-body @session('success') bg-primary @endsession">
             <table id="newsTable" class="table table-striped table-bordered" style="width:100%">
                 <thead>
                     <tr>
